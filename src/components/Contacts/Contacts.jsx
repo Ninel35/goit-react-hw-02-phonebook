@@ -1,9 +1,15 @@
-const Contacts = ({contactList}) => {
+import ElementContact from "components/ElementContact/ElementContact";
+
+const Contacts = ({contactList, filter}) => {
     return (
         <>
-            <h2>Contacts</h2>
             <ul>
-                {contactList.map((contact)=> (<li>{contact}</li>))}
+                {contactList.filter((elem, indx, array) => {
+                    if (filter === '' || elem.name.toLowerCase().includes(filter.toLowerCase())) {
+                        return true;
+                    } else return false;
+                })
+            .map((contact) => <ElementContact contact={contact} key={contact.id}/>)}
             </ul>
         </>
     );
