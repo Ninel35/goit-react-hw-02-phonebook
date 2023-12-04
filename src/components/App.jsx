@@ -17,7 +17,7 @@ export class App extends Component {
   
     this.setState((prevState) => {
       let isDuplicate = false;
-      const array = prevState.contacts.map(({ name }) => {
+      prevState.contacts.map(({ name }) => {
         if (name === evt.target.elements.name.value) {
           isDuplicate = true
         }
