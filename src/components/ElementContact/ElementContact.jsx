@@ -1,6 +1,9 @@
-const ElementContact = ({contact}) => {
+const ElementContact = ({contact, children}) => {
     return (
-        <li id={contact.id} > {contact.name}   {contact.number}</li>
+        <li id={contact.id} > {contact.name}   {contact.number}
+           {children}
+        </li>
+     
     )
 };
 export default ElementContact;
