@@ -21,6 +21,7 @@ export class App extends Component {
         if (name === evt.target.elements.name.value) {
           isDuplicate = true
         }
+        return name;
       });
 
       if (isDuplicate) {
