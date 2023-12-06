@@ -16,28 +16,21 @@ export class App extends Component {
     evt.preventDefault();
   
     this.setState((prevState) => {
-      let isDuplicate = false;
-      prevState.contacts.map(({ name }) => {
-        if (name === evt.target.elements.name.value) {
-          isDuplicate = true
-        }
-        return name;
-      });
 
-      if (isDuplicate) {
+      if (prevState.contacts.find(({name}) => name.toLowerCase() === evt.target.elements.name.value.toLowerCase())) {
         alert(evt.target.elements.name.value + " is already in contacts")
-        return {};
+        return;
       }
 
       return {
         contacts: [...prevState.contacts, { id: nanoid(), name: evt.target.elements.name.value, number: evt.target.elements.number.value }]
          }
     })
-  
-    setTimeout(() => {
-      evt.target.elements.name.value = "";
-      evt.target.elements.number.value = "";
-    }, 0);
+    
+    // setTimeout(() => {
+    //   evt.target.elements.name.value = "";
+    //   evt.target.elements.number.value = "";
+    // }, 0);
   };
 
 
@@ -47,8 +40,9 @@ export class App extends Component {
         filter: evt.target.value,
       }
     });
-
   };
+
+
 
    handleDelete = (evt) => {
       this.setState((prevState) => {
@@ -60,8 +54,6 @@ export class App extends Component {
       })
   }
   
-
-
 render() {
       return(
         <>
@@ -70,8 +62,20 @@ render() {
           <FormUser handler={this.handlerSubmit} />
           <h2>Contacts</h2>
           <Filter handlerFilter={this.handlerFilter} />
-          <Contacts contactList={this.state.contacts} filter={this.state.filter} handleDelete={this.handleDelete} />
+          <Contacts contactList={this.state.contacts.filter((elem) => {
+                    if (this.state.filter === '' || elem.name.toLowerCase().includes(this.state.filter.toLowerCase())) {
+                        return true
+                    } else return false
+          })}
+             handleDelete={this.handleDelete} />
           </>
   );
 }
 };
+
+
+
+
+
+
+
