@@ -2,8 +2,6 @@ import { Component } from "react";
 import FormUser from "./FormUser/FormUser";
 import Contacts from "./Contacts/Contacts";
 import Filter from "./Filter/Filter";
-import { nanoid } from "nanoid";
-
 
 
 export class App extends Component {
@@ -12,29 +10,20 @@ export class App extends Component {
     filter: ''
   };
 
-  handlerSubmit = (evt) => {
-    evt.preventDefault();
-  
+ sendUserData = (data) => {
     this.setState((prevState) => {
-
-      if (prevState.contacts.find(({name}) => name.toLowerCase() === evt.target.elements.name.value.toLowerCase())) {
-        alert(evt.target.elements.name.value + " is already in contacts")
+        if (prevState.contacts.find(({name}) => name.toLowerCase() === data.name.toLowerCase())) {
+  alert(data.name + " is already in contacts")
         return;
       }
 
       return {
-        contacts: [...prevState.contacts, { id: nanoid(), name: evt.target.elements.name.value, number: evt.target.elements.number.value }]
-         }
-    })
-    
-    // setTimeout(() => {
-    //   evt.target.elements.name.value = "";
-    //   evt.target.elements.number.value = "";
-    // }, 0);
-  };
+        contacts: [...prevState.contacts,  data]
+      }
+    }
+    )}
 
-
-  handlerFilter = (evt) => {
+ handlerFilter = (evt) => {
     this.setState(() => {
       return {
         filter: evt.target.value,
@@ -42,16 +31,21 @@ export class App extends Component {
     });
   };
 
-
-
-   handleDelete = (evt) => {
+handleDelete = (evt) => {
       this.setState((prevState) => {
         return {
-          contacts: prevState.contacts.filter((item, index, arr) => {
+          contacts: prevState.contacts.filter(item => {
             return item.id !== evt.target.parentElement.id
           })
        }
       })
+  }
+   getVisibleContacts = () => {
+    const { filter, contacts } = this.state;
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
   }
   
 render() {
@@ -59,19 +53,16 @@ render() {
         <>
             <h1>Phonebook</h1>
 
-          <FormUser handler={this.handlerSubmit} />
+          <FormUser sendUserData={this.sendUserData} />
           <h2>Contacts</h2>
           <Filter handlerFilter={this.handlerFilter} />
-          <Contacts contactList={this.state.contacts.filter((elem) => {
-                    if (this.state.filter === '' || elem.name.toLowerCase().includes(this.state.filter.toLowerCase())) {
-                        return true
-                    } else return false
-          })}
+          <Contacts contactList={this.getVisibleContacts()}
              handleDelete={this.handleDelete} />
           </>
   );
 }
 };
+
 
 
 
